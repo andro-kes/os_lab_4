@@ -15,14 +15,14 @@ lib2.so: lib2.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o lib2.so lib2.c $(LDLIBS)
 
 # Build static library lib1.a
-lib1.o: lib1.c
+lib1.o: lib1.c lib.h
 	$(CC) $(CFLAGS) -c lib1.c -o lib1.o
 
 lib1.a: lib1.o
 	ar rcs lib1.a lib1.o
 
 # Build program1 with static linking to lib1.a
-program1: program1.c lib1.a
+program1: program1.c lib1.a lib.h
 	$(CC) $(CFLAGS) -o program1 program1.c lib1.a $(LDLIBS)
 
 # Build program2 with dynamic loading support
