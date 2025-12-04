@@ -45,18 +45,24 @@ int main() {
             // Switch library
             dlclose(lib_handle);
             
+            const char *lib_name;
+            int new_lib;
             if (current_lib == 1) {
-                lib_handle = dlopen("./lib2.so", RTLD_LAZY);
-                current_lib = 2;
+                lib_name = "./lib2.so";
+                new_lib = 2;
             } else {
-                lib_handle = dlopen("./lib1.so", RTLD_LAZY);
-                current_lib = 1;
+                lib_name = "./lib1.so";
+                new_lib = 1;
             }
             
+            lib_handle = dlopen(lib_name, RTLD_LAZY);
             if (!lib_handle) {
                 fprintf(stderr, "Error loading library: %s\n", dlerror());
                 return 1;
             }
+            
+            current_lib = new_lib;
+            fprintf(stderr, "Switched to %s\n", lib_name);
             
             // Reload function pointers
             dlerror();  // Clear any existing error
@@ -81,14 +87,20 @@ int main() {
             int K;
             if (scanf("%d", &K) == 1) {
                 float result = Pi(K);
-                printf("%f\n", result);
+                printf("Pi(K=%d) = %f\n", K, result);
+            } else {
+                fprintf(stderr, "Invalid input\n");
             }
         } else if (command == 2) {
             float A, B;
             if (scanf("%f %f", &A, &B) == 2) {
                 float result = Square(A, B);
-                printf("%f\n", result);
+                printf("Square(A=%f, B=%f) = %f\n", A, B, result);
+            } else {
+                fprintf(stderr, "Invalid input\n");
             }
+        } else {
+            fprintf(stderr, "Unknown command\n");
         }
     }
     
