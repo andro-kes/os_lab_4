@@ -1,6 +1,7 @@
 # Build artifacts
 *.so
 *.o
+*.a
 program1
 program2
 

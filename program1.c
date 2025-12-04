@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// Function prototypes from the library
-extern float Pi(int K);
-extern float Square(float A, float B);
+#include "lib.h"
 
 int main() {
     int command;
@@ -13,14 +10,20 @@ int main() {
             int K;
             if (scanf("%d", &K) == 1) {
                 float result = Pi(K);
-                printf("%f\n", result);
+                printf("Pi(K=%d) = %f\n", K, result);
+            } else {
+                fprintf(stderr, "Invalid input\n");
             }
         } else if (command == 2) {
             float A, B;
             if (scanf("%f %f", &A, &B) == 2) {
                 float result = Square(A, B);
-                printf("%f\n", result);
+                printf("Square(A=%f, B=%f) = %f\n", A, B, result);
+            } else {
+                fprintf(stderr, "Invalid input\n");
             }
+        } else {
+            fprintf(stderr, "Unknown command\n");
         }
     }
     

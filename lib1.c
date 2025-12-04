@@ -1,4 +1,5 @@
 #include <math.h>
+#include "lib.h"
 
 // Implementation A: Leibniz series for Pi
 // Pi/4 = 1 - 1/3 + 1/5 - 1/7 + ...
