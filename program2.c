@@ -20,11 +20,20 @@ int main() {
     }
     
     // Get function pointers
+    dlerror();  // Clear any existing error
     Pi = (PiFunc)dlsym(lib_handle, "Pi");
-    Square = (SquareFunc)dlsym(lib_handle, "Square");
+    char *error = dlerror();
+    if (error != NULL) {
+        fprintf(stderr, "Error loading Pi: %s\n", error);
+        dlclose(lib_handle);
+        return 1;
+    }
     
-    if (!Pi || !Square) {
-        fprintf(stderr, "Error loading functions: %s\n", dlerror());
+    dlerror();  // Clear any existing error
+    Square = (SquareFunc)dlsym(lib_handle, "Square");
+    error = dlerror();
+    if (error != NULL) {
+        fprintf(stderr, "Error loading Square: %s\n", error);
         dlclose(lib_handle);
         return 1;
     }
@@ -50,11 +59,20 @@ int main() {
             }
             
             // Reload function pointers
+            dlerror();  // Clear any existing error
             Pi = (PiFunc)dlsym(lib_handle, "Pi");
-            Square = (SquareFunc)dlsym(lib_handle, "Square");
+            char *error = dlerror();
+            if (error != NULL) {
+                fprintf(stderr, "Error loading Pi: %s\n", error);
+                dlclose(lib_handle);
+                return 1;
+            }
             
-            if (!Pi || !Square) {
-                fprintf(stderr, "Error loading functions: %s\n", dlerror());
+            dlerror();  // Clear any existing error
+            Square = (SquareFunc)dlsym(lib_handle, "Square");
+            error = dlerror();
+            if (error != NULL) {
+                fprintf(stderr, "Error loading Square: %s\n", error);
                 dlclose(lib_handle);
                 return 1;
             }
