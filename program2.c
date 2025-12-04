@@ -45,24 +45,24 @@ int main() {
             // Switch library
             dlclose(lib_handle);
             
+            const char *lib_name;
+            int new_lib;
             if (current_lib == 1) {
-                lib_handle = dlopen("./lib2.so", RTLD_LAZY);
-                current_lib = 2;
-                if (lib_handle) {
-                    fprintf(stderr, "Switched to ./lib2.so\n");
-                }
+                lib_name = "./lib2.so";
+                new_lib = 2;
             } else {
-                lib_handle = dlopen("./lib1.so", RTLD_LAZY);
-                current_lib = 1;
-                if (lib_handle) {
-                    fprintf(stderr, "Switched to ./lib1.so\n");
-                }
+                lib_name = "./lib1.so";
+                new_lib = 1;
             }
             
+            lib_handle = dlopen(lib_name, RTLD_LAZY);
             if (!lib_handle) {
                 fprintf(stderr, "Error loading library: %s\n", dlerror());
                 return 1;
             }
+            
+            current_lib = new_lib;
+            fprintf(stderr, "Switched to %s\n", lib_name);
             
             // Reload function pointers
             dlerror();  // Clear any existing error

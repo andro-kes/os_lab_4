@@ -18,7 +18,7 @@ run_test() {
     echo -n "Testing $test_name... "
     
     # Get only stdout, ignore stderr
-    result=$(echo "$input" | ./$program 2>/dev/null | head -n 1 | grep -oP '= \K[0-9.]+')
+    result=$(echo "$input" | ./$program 2>/dev/null | head -n 1 | grep -oP '= \K[0-9]+(\.[0-9]+)?')
     
     # Compare using bc for floating point comparison
     if [ -z "$result" ]; then
@@ -62,7 +62,7 @@ run_test "Square(5,4) Rectangle (lib1)" "program2" "2 5 4" "20"
 
 # Test switching to lib2 and Square for triangle 5x4 = 10
 echo -n "Testing Library Switch and Square(5,4) Triangle (lib2)... "
-result=$(echo -e "0\n2 5 4" | ./program2 2>/dev/null | head -n 1 | grep -oP '= \K[0-9.]+')
+result=$(echo -e "0\n2 5 4" | ./program2 2>/dev/null | head -n 1 | grep -oP '= \K[0-9]+(\.[0-9]+)?')
 if [ -z "$result" ]; then
     echo -e "${RED}FAILED${NC} (no output)"
     TESTS_FAILED=$((TESTS_FAILED + 1))
@@ -79,7 +79,7 @@ fi
 
 # Test Pi with K=100 using lib2 (Wallis) after switch
 echo -n "Testing Pi(100) Wallis (lib2) after switch... "
-result=$(echo -e "0\n1 100" | ./program2 2>/dev/null | head -n 1 | grep -oP '= \K[0-9.]+')
+result=$(echo -e "0\n1 100" | ./program2 2>/dev/null | head -n 1 | grep -oP '= \K[0-9]+(\.[0-9]+)?')
 if [ -z "$result" ]; then
     echo -e "${RED}FAILED${NC} (no output)"
     TESTS_FAILED=$((TESTS_FAILED + 1))
