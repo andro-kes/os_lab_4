@@ -1,8 +1,6 @@
-#include <math.h>
 #include "lib.h"
 
-// Implementation A: Leibniz series for Pi
-// Pi/4 = 1 - 1/3 + 1/5 - 1/7 + ...
+// Рассчитываем Пи через Лейбница
 float Pi(int K) {
     float sum = 0.0;
     for (int i = 0; i < K; i++) {
@@ -16,7 +14,7 @@ float Pi(int K) {
     return 4 * sum;
 }
 
-// Implementation A: Rectangle area
+// Вычисляем площадь прямоугольника
 float Square(float A, float B) {
     return A * B;
 }

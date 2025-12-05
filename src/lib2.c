@@ -1,4 +1,3 @@
-#include <math.h>
 #include "lib.h"
 
 // Implementation B: Wallis formula for Pi

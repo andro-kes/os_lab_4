@@ -1,41 +1,59 @@
-# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -fPIC
+CFLAGS = -Wall -Wextra -fPIC -I./src
 LDFLAGS = -shared
 LDLIBS = -lm -ldl
 
-# Targets
-all: lib1.so lib2.so lib1.a program1 program2
+SRC_DIR = src
+BUILD_DIR = build
 
-# Build shared libraries
-lib1.so: lib1.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o lib1.so lib1.c $(LDLIBS)
+LIB1_SRC = $(SRC_DIR)/lib1.c
+LIB2_SRC = $(SRC_DIR)/lib2.c
+PROG1_SRC = $(SRC_DIR)/program1.c
+PROG2_SRC = $(SRC_DIR)/program2.c
 
-lib2.so: lib2.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o lib2.so lib2.c $(LDLIBS)
+LIB_H = $(SRC_DIR)/lib.h
 
-# Build static library lib1.a
-lib1.o: lib1.c lib.h
-	$(CC) $(CFLAGS) -c lib1.c -o lib1.o
+all: $(BUILD_DIR) \
+     $(BUILD_DIR)/lib1.so \
+     $(BUILD_DIR)/lib2.so \
+     $(BUILD_DIR)/lib1.a \
+     $(BUILD_DIR)/program1 \
+     $(BUILD_DIR)/program2
 
-lib1.a: lib1.o
-	ar rcs lib1.a lib1.o
+# Create build folder if not exists
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-# Build program1 with static linking to lib1.a
-program1: program1.c lib1.a lib.h
-	$(CC) $(CFLAGS) -o program1 program1.c lib1.a $(LDLIBS)
+# ===== Shared libraries =====
+$(BUILD_DIR)/lib1.so: $(LIB1_SRC)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
-# Build program2 with dynamic loading support
-program2: program2.c
-	$(CC) $(CFLAGS) -o program2 program2.c $(LDLIBS)
+$(BUILD_DIR)/lib2.so: $(LIB2_SRC)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
-# Test target
+# ===== Static library (lib1.a) =====
+$(BUILD_DIR)/lib1.o: $(LIB1_SRC) $(LIB_H)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/lib1.a: $(BUILD_DIR)/lib1.o
+	ar rcs $@ $<
+
+# ===== Programs =====
+# Static linking to lib1.a
+$(BUILD_DIR)/program1: $(PROG1_SRC) $(BUILD_DIR)/lib1.a $(LIB_H)
+	$(CC) $(CFLAGS) -o $@ $< $(BUILD_DIR)/lib1.a $(LDLIBS)
+
+# For dynamic loading (dlopen)
+$(BUILD_DIR)/program2: $(PROG2_SRC)
+	$(CC) $(CFLAGS) -o $@ $< $(LDLIBS)
+
+# ===== Test =====
 test: all
 	@echo "Running tests..."
 	@./run_tests.sh
 
-# Clean build artifacts
+# ===== Clean =====
 clean:
-	rm -f lib1.so lib2.so lib1.a lib1.o program1 program2
+	rm -rf $(BUILD_DIR)
 
-.PHONY: all test clean
+.PHONY: all clean test

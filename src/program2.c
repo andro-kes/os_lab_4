@@ -10,17 +10,16 @@ int main() {
     void *lib_handle = NULL;
     PiFunc Pi = NULL;
     SquareFunc Square = NULL;
-    int current_lib = 1;  // Start with lib1
+    int current_lib = 1;  
     
-    // Load initial library (lib1)
+    // Загружаем библиотеку через относительные пути
     lib_handle = dlopen("./lib1.so", RTLD_LAZY);
     if (!lib_handle) {
         fprintf(stderr, "Error loading lib1.so: %s\n", dlerror());
         return 1;
     }
     
-    // Get function pointers
-    dlerror();  // Clear any existing error
+    dlerror();
     Pi = (PiFunc)dlsym(lib_handle, "Pi");
     char *error = dlerror();
     if (error != NULL) {
@@ -29,7 +28,7 @@ int main() {
         return 1;
     }
     
-    dlerror();  // Clear any existing error
+    dlerror();
     Square = (SquareFunc)dlsym(lib_handle, "Square");
     error = dlerror();
     if (error != NULL) {
@@ -42,7 +41,8 @@ int main() {
     
     while (scanf("%d", &command) == 1) {
         if (command == 0) {
-            // Switch library
+            // 1. Если пользователь вводит команду «0», 
+            // то программа переключает одну реализацию контрактов на другую
             dlclose(lib_handle);
             
             const char *lib_name;
@@ -64,8 +64,7 @@ int main() {
             current_lib = new_lib;
             fprintf(stderr, "Switched to %s\n", lib_name);
             
-            // Reload function pointers
-            dlerror();  // Clear any existing error
+            dlerror(); 
             Pi = (PiFunc)dlsym(lib_handle, "Pi");
             char *error = dlerror();
             if (error != NULL) {
@@ -74,7 +73,7 @@ int main() {
                 return 1;
             }
             
-            dlerror();  // Clear any existing error
+            dlerror();  
             Square = (SquareFunc)dlsym(lib_handle, "Square");
             error = dlerror();
             if (error != NULL) {
